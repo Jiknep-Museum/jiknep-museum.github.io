@@ -19,23 +19,23 @@ body {
     position: relative;
     background-color: black;
 }
-.tableau:nth-child(5n) {
+div:nth-child(5n) .tableau {
     border-image: url('img/cadre1.png') 60 60 60 60 stretch;
     border-width: 35px;
 }
-.tableau:nth-child(5n+1) {
+div:nth-child(5n+1) .tableau{
     border-image: url('img/cadre2.png') 81 86 90 95 stretch;
     border-width: 35px;
 }
-.tableau:nth-child(5n+2) {
+div:nth-child(5n+2) .tableau{
     border-image: url('img/cadre3.png') 44 40 48 44 stretch;
     border-width: 35px;
 }
-.tableau:nth-child(5n+3) {
+div:nth-child(5n+3) .tableau{
     border-image: url('img/cadre4.png') 125 130 125 130 stretch;
     border-width: 35px;
 }
-.tableau:nth-child(5n+4) {
+div:nth-child(5n+4) .tableau{
     border-image: url('img/cadre5.png') 118 120 stretch;
     border-width: 35px;
 }
@@ -46,14 +46,14 @@ body {
     height: calc(min(80vh,80vw));
 }
 .auteur {
-    --halo-color: #fff;
-    --halo-size: 1px;
     color: black;
     position: absolute;
     bottom: 0.2em;
     right: 1em;
     font-size: 140%;
     font-family: 'Brush Script MT', cursive;
+    --halo-color: #fff;
+    --halo-size: 0.3px;
     filter: 
         drop-shadow(var(--halo-size) 0 0 var(--halo-color)) 
         drop-shadow(0 var(--halo-size) 0 var(--halo-color)) 
