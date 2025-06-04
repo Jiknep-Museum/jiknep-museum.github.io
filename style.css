@@ -17,6 +17,7 @@ body {
 .tableau {
     border: solid;
     position: relative;
+    background-color: black;
 }
 .tableau:nth-child(5n) {
     border-image: url('img/cadre1.png') 60 60 60 60 stretch;
