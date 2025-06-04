@@ -1,0 +1,104 @@
+body {
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url("img/fond2.png");
+    background-size: 70px;
+}
+
+.jqnp {
+    margin: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tableau {
+    border: solid 
+}
+.tableau:not(.horizontal):not(.vertical){
+    width: calc(min(80vw,80vh));
+    height: calc(min(80vh,80vw));
+}
+.horizontal {
+    width: calc(min(80vw,80vh));
+}
+.vertical{
+    height: calc(min(80vh,80vw));
+}
+.auteur {
+    color: black;
+    position: relative;
+    top: -80px;
+    left: 60px;
+    width: 100%;
+    font-size: 120%;
+    font-family: 'Brush Script MT', cursive;
+    filter: 
+        drop-shadow(1px 0 0px #fff) 
+        drop-shadow(0 1px 0 #fff) 
+        drop-shadow(-1px 0 0 #fff) 
+        drop-shadow(0 -1px 0 #fff);
+}
+
+.plaque {
+    border-image: url("img/plaque.png") 70/auto;
+    color: darkgoldenrod;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 50vw;
+    margin-bottom: 1em;
+    padding: 1em 2em;
+}
+
+.nom {
+    font-weight: bold;
+    font-size: x-large;
+    filter: blur(5px);
+    font-family: Georgia, serif;
+}
+
+.nom:hover {
+    filter: blur(0px)    
+        drop-shadow(1px 0 0px gold) 
+        drop-shadow(0 1px 0 gold) 
+        drop-shadow(-1px 0 0 gold) 
+        drop-shadow(0 -1px 0 gold);
+}
+
+.react {
+    border: dotted saddlebrown 1px;
+    border-radius: 5px;
+    margin-right: 0.5em;
+    padding: 0 0.2em;
+}
+.react_str{
+    padding-right: 0 0.4em;
+}
+h1 {
+    color: beige;
+}
+
+div:nth-child(5n) .tableau {
+    border-image: url('img/cadre1.png') 60 60 60 60 stretch;
+    border-width: 50px;
+}
+div:nth-child(5n+1) .tableau {
+    border-image: url('img/cadre2.png') 81 86 90 95 stretch;
+    border-width: 87px;
+}
+div:nth-child(5n+2) .tableau {
+    border-image: url('img/cadre3.png') 44 40 48 44 stretch;
+    border-width: 70px;
+}
+div:nth-child(5n+3) .tableau {
+    border-image: url('img/cadre4.png') 125 130 125 130 stretch;
+    border-width: 70px 75px;
+}
+div:nth-child(5n+4) .tableau {
+    border-image: url('img/cadre5.png') 118 120 stretch;
+    border-width: 70px;
+}

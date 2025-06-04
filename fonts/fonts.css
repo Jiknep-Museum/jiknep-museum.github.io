@@ -1,0 +1,51 @@
+body {
+  background-color: #605050;
+  color: #333;
+  --halo: #d1cfcf;
+}
+p {
+  filter: drop-shadow(1px 0 0px var(--halo)) drop-shadow(0 1px 0 var(--halo)) drop-shadow(-1px 0 0 var(--halo)) drop-shadow(0 -1px 0 var(--halo))
+}
+@font-face {
+  font-family: "sign1";
+  src: url("Autography.otf");
+  size-adjust: 140%;
+}
+@font-face {
+  font-family: "sign2";
+  src: url("BethanyAvanue.otf");
+  size-adjust: 145%;
+}
+@font-face {
+  font-family: "sign3";
+  src: url("Cathalia.ttf");
+}
+@font-face {
+  font-family: "sign4";
+  src: url("Dillnation.otf");
+  size-adjust: 170%;
+}
+@font-face {
+  font-family: "sign5";  
+  src: url("Fair Prosper.ttf");
+  size-adjust: 100%;
+}
+@font-face {
+  font-family: "sign6";  
+  src: url("hand script.ttf");
+  size-adjust: 130%;
+}
+@font-face {
+  font-family: "sign7";
+  src: url("Mayonice.ttf");
+}
+@font-face {
+  font-family: "sign8";
+  src: url("Photograph Signature.ttf");
+  size-adjust: 145%;
+}
+@font-face {
+  font-family: "sign9";
+  src: url("Thesignature.ttf");
+  size-adjust: 170%;
+}

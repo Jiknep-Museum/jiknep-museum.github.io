@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"> 
+        <link rel="icon" href="img/favicon.ico" />
+        <title>JQNP Remix Viewer</title>
+        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="fonts/fonts.css">
+    </head>
+    <body>
+        <script src="data.js"></script>
+        <script>
+            function add_jqnep(jqnp, mur){
+                // panneau général
+                let jqnpElt = document.createElement("div");
+                jqnpElt.className = "jqnp";
+                mur.append(jqnpElt)
+
+                // tableau
+                let tableau = document.createElement("img");
+                tableau.classList.add("tableau");
+                tableau.onload = e => tableau.classList.add(tableau.width>tableau.height?"horizontal":"vertical");
+                tableau.src = jqnp.image_url;
+                jqnpElt.append(tableau);
+
+                // auteur
+                let auteurElt = document.createElement("div");
+                auteurElt.className = "auteur";
+                let nbSignature = Array.from(jqnp.auteur)
+                    .map(s=>s.charCodeAt(0))
+                    .reduce((a,v)=>a+=v, 0) 
+                    % 9 + 1;
+                auteurElt.style.fontFamily = "sign" + nbSignature;
+                auteurElt.textContent = jqnp.auteur;
+                jqnpElt.append(auteurElt);
+
+                // plaque
+                let plaque = document.createElement("div");
+                plaque.className = "plaque";
+                jqnpElt.append(plaque);
+
+                // nom
+                let nomElt = document.createElement("div");
+                nomElt.className = "nom";
+                nomElt.append(document.createTextNode(jqnp.reponse[0]));
+                plaque.append(nomElt);
+
+                // reactions
+                let reactions = document.createElement("div");
+                reactions.className = "reactions";
+                let buildReacticon = (text,reacts) => {
+                    let reactPart = document.createElement("div");
+                    if (reacts.length > 0){
+                        reactPart.append(document.createTextNode(text))
+                        for (react of reacts) {
+                            let reactElt = document.createElement("span");
+                            reactElt.className = "react";
+                            let reactStr = document.createElement("span");
+                            reactStr.className = "react_str";
+                            reactStr.append(document.createTextNode(react[0]))
+                            let reactCount = document.createElement("span");
+                            reactCount.className = "react_count";
+                            reactCount.append(document.createTextNode(react[1]))
+                            reactElt.append(reactStr);
+                            reactElt.append(document.createTextNode(" "));
+                            reactElt.append(reactCount)
+                            reactPart.append(reactElt);
+                        }
+                    }
+                    return reactPart;
+                }
+                reactions.append(buildReacticon("réactions à l'image: ", jqnp.reactions_image));
+                reactions.append(buildReacticon("réactions au nom: ", jqnp.reactions_reponse));
+                plaque.append(reactions);
+            }
+
+            let body = document.body;
+            jqnps.reverse();
+            for (jqnp of jqnps.splice(0,50)) {
+                add_jqnep(jqnp,body);
+            }
+        </script>
+
+    </body>
+</html>

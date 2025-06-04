@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="test.css">
+
+    </head>
+    <body>
+        <script>
+            function init() {
+                for (i=1; i <= 9; i++){
+                    let text = document.createElement("p");
+                    text.textContent = "Signature " + i;
+                    text.style.fontFamily ="sign" + i;
+                    text.style.fontSize = "20px";
+                    text.style.fontWeight = "bold";
+                    document.body.appendChild(text);
+                }
+            }
+            init();
+        </script>
+    </body>
+</html>
