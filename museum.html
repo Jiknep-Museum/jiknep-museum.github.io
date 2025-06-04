@@ -8,8 +8,34 @@
         <link rel="stylesheet" href="fonts/fonts.css">
     </head>
     <body>
+        <div id="compteur" style="position: fixed; z-index: 5; color: aliceblue;">test</div>
         <script src="data.js"></script>
         <script>
+            let alignTimer;
+
+            function imgResize(elt){
+                let naturalRatio = elt.naturalWidth / elt.naturalHeight;
+                // try to scale verticaly first (70% of screen)
+                let height = window.innerHeight * 0.70;
+                let width = height * naturalRatio;
+
+                if (width > window.innerWidth * 0.90){
+                    width = window.innerWidth * 0.90;
+                    height = width / naturalRatio; 
+                }
+                elt.style.height = (height|0) + "px" ;
+                elt.style.width = (width|0) + "px" ;
+            }
+            function alignScroll() {
+                document.getElementById("compteur").textContent = document.body.scrollTop;
+                for (jqnp of document.querySelectorAll(".jqnp")){
+                    if (jqnp.offsetTop + jqnp.offsetHeight/2 > pageYOffset) {
+                        scrollTo({top: jqnp.offsetTop - 10, behavior:"smooth"});
+                        break;
+                    }
+                }
+
+            }
             function add_jqnep(jqnp, mur){
                 // panneau général
                 let jqnpElt = document.createElement("div");
@@ -17,11 +43,15 @@
                 mur.append(jqnpElt)
 
                 // tableau
-                let tableau = document.createElement("img");
-                tableau.classList.add("tableau");
-                tableau.onload = e => tableau.classList.add(tableau.width>tableau.height?"horizontal":"vertical");
-                tableau.src = jqnp.image_url;
-                jqnpElt.append(tableau);
+                let tableauElt = document.createElement("div");
+                tableauElt.classList.add("tableau");
+                jqnpElt.append(tableauElt);
+                
+                // image
+                let imgElt = document.createElement("img");
+                imgElt.src = jqnp.image_url;
+                imgElt.onload = elt=>imgResize(elt.target);
+                tableauElt.append(imgElt);
 
                 // auteur
                 let auteurElt = document.createElement("div");
@@ -32,22 +62,22 @@
                     % 9 + 1;
                 auteurElt.style.fontFamily = "sign" + nbSignature;
                 auteurElt.textContent = jqnp.auteur;
-                jqnpElt.append(auteurElt);
+                tableauElt.append(auteurElt);
 
                 // plaque
-                let plaque = document.createElement("div");
-                plaque.className = "plaque";
-                jqnpElt.append(plaque);
+                let plaqueElt = document.createElement("div");
+                plaqueElt.className = "plaque";
+                jqnpElt.append(plaqueElt);
 
                 // nom
                 let nomElt = document.createElement("div");
                 nomElt.className = "nom";
                 nomElt.append(document.createTextNode(jqnp.reponse[0]));
-                plaque.append(nomElt);
+                plaqueElt.append(nomElt);
 
                 // reactions
-                let reactions = document.createElement("div");
-                reactions.className = "reactions";
+                let reactionsElt = document.createElement("div");
+                reactionsElt.className = "reactions";
                 let buildReacticon = (text,reacts) => {
                     let reactPart = document.createElement("div");
                     if (reacts.length > 0){
@@ -69,9 +99,9 @@
                     }
                     return reactPart;
                 }
-                reactions.append(buildReacticon("réactions à l'image: ", jqnp.reactions_image));
-                reactions.append(buildReacticon("réactions au nom: ", jqnp.reactions_reponse));
-                plaque.append(reactions);
+                reactionsElt.append(buildReacticon("réactions à l'image: ", jqnp.reactions_image));
+                reactionsElt.append(buildReacticon("réactions au nom: ", jqnp.reactions_reponse));
+                plaqueElt.append(reactionsElt);
             }
 
             let body = document.body;
@@ -79,6 +109,17 @@
             for (jqnp of jqnps.splice(0,50)) {
                 add_jqnep(jqnp,body);
             }
+            window.onresize = evt => {
+                for (img of document.querySelectorAll(".tableau img")) {
+                    imgResize(img);
+                }
+            }
+            let timer;
+            document.body.onscroll = evt => {
+                clearTimeout(timer);
+                timer = setTimeout(alignScroll, 500);
+            }
+        
         </script>
 
     </body>
