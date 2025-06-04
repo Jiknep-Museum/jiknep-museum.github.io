@@ -8,7 +8,6 @@
         <link rel="stylesheet" href="fonts/fonts.css">
     </head>
     <body>
-        <div id="compteur" style="position: fixed; z-index: 5; color: aliceblue;">test</div>
         <script src="data.js"></script>
         <script>
             let alignTimer;
@@ -27,7 +26,6 @@
                 elt.style.width = (width|0) + "px" ;
             }
             function alignScroll() {
-                document.getElementById("compteur").textContent = document.body.scrollTop;
                 for (jqnp of document.querySelectorAll(".jqnp")){
                     if (jqnp.offsetTop + jqnp.offsetHeight/2 > pageYOffset) {
                         scrollTo({top: jqnp.offsetTop - 10, behavior:"smooth"});
