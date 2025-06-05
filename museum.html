@@ -8,116 +8,67 @@
         <link rel="stylesheet" href="fonts/fonts.css">
     </head>
     <body>
+
+        <button id="search-toggle"><span class="halo">🔍</span></button>    
+        <div id="search-panel">
+            <table>
+                <tr>
+                    <th colspan="3">Filtre</th>
+                    <th colspan="2">Tri</th>
+                </tr>
+                <tr>
+                    <td>Nom : </td>
+                    <td>
+                        <select id="search-name-type">
+                            <option value="contient">Contient</option>
+                            <option value="regex">Regex</option>
+                            <option value="exact">Exact</option>
+                        </select>
+                    </td>
+                    <td><input id="search-name-value" type="text"></td>
+                    <td><input id="sort-order-name" type="number" size="2" min="1" max="4"></td>
+                    <td><input id="sort-direction-name" type="checkbox">desc</td>
+                </tr>
+                <tr>
+                    <td>Auteur : </td>
+                    <td></td>
+                    <td><select id="search-author-value" type="text"></select></td>
+                    <td><input id="sort-order-author" type="number" size="2" min="1" max="4"></td>
+                    <td><input id="sort-direction-author" type="checkbox">desc</td>
+                </tr>
+                <tr>
+                    <td>Réactions : </td>
+                    <td>
+                        <select id="search-reactions-type">
+                            <option value="mini">Au moins</option>
+                            <option value="max">Au plus</option>
+                            <option value="exact">Exactement</option>
+                        </select>
+                    </td>
+                    <td><input id="search-reactions-value" type="text"></td>
+                    <td><input id="sort-order-reactions" type="number" size="2" min="1" max="4"></td>
+                    <td><input id="sort-direction-reactions" type="checkbox">desc</td>
+                </tr>
+                <tr>
+                    <td>Date : </td>
+                    <td>
+                        <select id="search-date-type">
+                            <option value="avant">Avant</option>
+                            <option value="apres">Après</option>
+                            <option value="exact">Exact</option>
+                        </select>
+                    </td>
+                    <td><input id="search-date-value" type="date"></td>
+                    <td><input id="sort-order-date" value="1" type="number" min="0"  min="1" max="4"></td>
+                    <td><input id="sort-direction-date" type="checkbox">desc</td>
+                </tr>
+            </table>
+        </div>
+ 
+        <div id="museum"></div>
+
         <script src="http://jknep.hopto.org/jknep/data.js"></script>
-        <script>
-            let alignTimer;
-
-            function imgResize(elt){
-                let naturalRatio = elt.naturalWidth / elt.naturalHeight;
-                // try to scale verticaly first (70% of screen)
-                let height = window.innerHeight * 0.70;
-                let width = height * naturalRatio;
-
-                if (width > window.innerWidth * 0.90){
-                    width = window.innerWidth * 0.90;
-                    height = width / naturalRatio; 
-                }
-                elt.style.height = (height|0) + "px" ;
-                elt.style.width = (width|0) + "px" ;
-            }
-            function alignScroll() {
-                for (jqnp of document.querySelectorAll(".jqnp")){
-                    if (jqnp.offsetTop + jqnp.offsetHeight/2 > pageYOffset) {
-                        scrollTo({top: jqnp.offsetTop - 10, behavior:"smooth"});
-                        break;
-                    }
-                }
-            }
-            function add_jqnep(jqnp, mur){
-                // panneau général
-                let jqnpElt = document.createElement("div");
-                jqnpElt.className = "jqnp";
-                mur.append(jqnpElt)
-
-                // tableau
-                let tableauElt = document.createElement("div");
-                tableauElt.classList.add("tableau");
-                jqnpElt.append(tableauElt);
-                
-                // image
-                let imgElt = document.createElement("img");
-                imgElt.src = jqnp.image_url;
-                imgElt.onload = elt=>imgResize(elt.target);
-                tableauElt.append(imgElt);
-
-                // auteur
-                let auteurElt = document.createElement("div");
-                auteurElt.className = "auteur";
-                let nbSignature = Array.from(jqnp.auteur)
-                    .map(s=>s.charCodeAt(0))
-                    .reduce((a,v)=>a+=v, 0) 
-                    % 9 + 1;
-                auteurElt.style.fontFamily = "sign" + nbSignature;
-                auteurElt.textContent = jqnp.auteur;
-                tableauElt.append(auteurElt);
-
-                // plaque
-                let plaqueElt = document.createElement("div");
-                plaqueElt.className = "plaque";
-                jqnpElt.append(plaqueElt);
-
-                // nom
-                let nomElt = document.createElement("div");
-                nomElt.className = "nom";
-                nomElt.append(document.createTextNode(jqnp.reponse[0]));
-                plaqueElt.append(nomElt);
-
-                // reactions
-                let reactionsElt = document.createElement("div");
-                reactionsElt.className = "reactions";
-                let buildReacticon = (text,reacts) => {
-                    let reactPart = document.createElement("div");
-                    if (reacts.length > 0){
-                        reactPart.append(document.createTextNode(text))
-                        for (react of reacts) {
-                            let reactElt = document.createElement("span");
-                            reactElt.className = "react";
-                            let reactStr = document.createElement("span");
-                            reactStr.className = "react_str";
-                            reactStr.append(document.createTextNode(react[0]))
-                            let reactCount = document.createElement("span");
-                            reactCount.className = "react_count";
-                            reactCount.append(document.createTextNode(react[1]))
-                            reactElt.append(reactStr);
-                            reactElt.append(document.createTextNode(" "));
-                            reactElt.append(reactCount)
-                            reactPart.append(reactElt);
-                        }
-                    }
-                    return reactPart;
-                }
-                reactionsElt.append(buildReacticon("réactions à l'image: ", jqnp.reactions_image));
-                reactionsElt.append(buildReacticon("réactions au nom: ", jqnp.reactions_reponse));
-                plaqueElt.append(reactionsElt);
-            }
-
-            let body = document.body;
-            jqnps.reverse();
-            for (jqnp of jqnps.splice(0,50)) {
-                add_jqnep(jqnp,body);
-            }
-            window.onresize = evt => {
-                for (img of document.querySelectorAll(".tableau img")) {
-                    imgResize(img);
-                }
-            }
-            let timer;
-            document.body.onscroll = evt => {
-                clearTimeout(timer);
-                timer = setTimeout(alignScroll, 500);
-            }
-        
-        </script>
+        <script src="main.js"></script>
 
     </body>
 </html>

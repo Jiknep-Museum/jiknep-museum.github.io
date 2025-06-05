@@ -52,6 +52,8 @@ div:nth-child(5n+4) .tableau{
     right: 1em;
     font-size: 140%;
     font-family: 'Brush Script MT', cursive;
+}
+.halo {
     --halo-color: #fff;
     --halo-size: 0.3px;
     filter: 
@@ -59,8 +61,8 @@ div:nth-child(5n+4) .tableau{
         drop-shadow(0 var(--halo-size) 0 var(--halo-color)) 
         drop-shadow(calc(0px - var(--halo-size)) 0 0 var(--halo-color)) 
         drop-shadow(0 calc(0px - var(--halo-size)) 0 var(--halo-color));
-}
 
+}
 .plaque {
     border-image: url("img/plaque.png") 70/auto;
     color: darkgoldenrod;
@@ -101,4 +103,28 @@ h1 {
     color: beige;
 }
 
+#search-panel {
+    display: none;
+    position: fixed;
+    top: 5px;
+    right: 5px;
+    background-image: url("img/wood.jpg");
+    padding: 30px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 4;
+}
+#search-panel th, #search-panel td {
+    color: aliceblue;
+}
 
+#search-toggle {
+    position: fixed;
+    top: 5px;
+    right: 5px;
+    background-image: url("img/wood.jpg");
+    color: aliceblue;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 5;
+}
