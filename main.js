@@ -106,8 +106,11 @@ function searchToggleClick(){
 }
 
 let allJikneps;
+let lastLoadedJikneps;
 function fillMuseum(){
     allJikneps = [...jqnps];
+    lastLoadedJikneps = 0;
+
     // filter par nom
     let nameValue = document.getElementById("search-name-value").value;
     let nameType = document.getElementById("search-name-type").value;
@@ -187,10 +190,19 @@ function fillMuseum(){
     let museum = document.getElementById("museum");
     museum.innerHTML = "";
 
-    for (jqnp of allJikneps.splice(0,50)) {
-        add_jqnep(jqnp,museum);
-    }
+    lazyLoadJikneps();
 
+}
+
+const loadPack = 20;
+function lazyLoadJikneps() {
+    if (pageYOffset > document.body.scrollHeight - window.innerHeight -5) {
+        let museum = document.getElementById("museum");
+        for (let i=lastLoadedJikneps; i<allJikneps.length && i<lastLoadedJikneps+loadPack; i++) {
+            add_jqnep(allJikneps[i], museum);
+        }
+        lastLoadedJikneps += loadPack;
+    }
 }
 
 // ******************** Main code ********************
@@ -202,8 +214,9 @@ window.onresize = evt => {
 }
 let timer;
 document.body.onscroll = evt => {
-    clearTimeout(timer);
-    timer = setTimeout(alignScroll, 100);
+    //clearTimeout(timer);
+    //timer = setTimeout(alignScroll, 100);
+    lazyLoadJikneps();
 }
 document.body.onload = evt => {
     document.getElementById("search-toggle").onclick = searchToggleClick
