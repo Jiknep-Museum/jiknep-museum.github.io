@@ -53,6 +53,7 @@ function add_jqnep(jqnp, mur){
         % 9 + 1;
     auteurElt.style.fontFamily = "sign" + nbSignature;
     auteurElt.textContent = jqnp.auteur;
+    auteurElt.title = jqnp.auteur;
     tableauElt.append(auteurElt);
 
     // plaque
@@ -96,12 +97,12 @@ function add_jqnep(jqnp, mur){
 }
 
 function searchToggleClick(){
-    let searchElt = document.getElementById("search-panel");
-    if (searchElt.style.display === "none" || searchElt.style.display === "") {
-        searchElt.style.display = "block";
-        searchElt.focus();
+    let optionsPanel = document.getElementById("options-panel");
+    if (optionsPanel.style.display === "none" || optionsPanel.style.display === "") {
+        optionsPanel.style.display = "block";
+        optionsPanel.focus();
     } else {
-        searchElt.style.display = "none";
+        optionsPanel.style.display = "none";
     }
 }
 
@@ -187,6 +188,9 @@ function fillMuseum(){
         }
     }
 
+    let count = document.getElementById("count");
+    count.textContent = "Résultats : " + allJikneps.length;
+
     let museum = document.getElementById("museum");
     museum.innerHTML = "";
 
@@ -214,22 +218,29 @@ window.onresize = evt => {
 }
 let timer;
 document.body.onscroll = evt => {
-    //clearTimeout(timer);
-    //timer = setTimeout(alignScroll, 100);
     lazyLoadJikneps();
+    if (document.getElementById("auto-align").checked){
+        clearTimeout(timer);
+        timer = setTimeout(alignScroll, 100);
+    }
 }
-document.body.onload = evt => {
-    document.getElementById("search-toggle").onclick = searchToggleClick
-    document.querySelectorAll("#search-panel input").forEach(elt => {
+document.addEventListener("DOMContentLoaded", (event) => {
+    // ouverture/fermeture de la boite de recherche
+    document.getElementById("options-toggle").onclick = searchToggleClick
+    // rafraichisement des tableaux en cas de changement des options de recherche
+    document.querySelectorAll("#search-options input").forEach(elt => {
+        if (elt.type == "checkbox") {
+            elt.onclick = fillMuseum;
+        }
+        else {
+            elt.onkeyup = fillMuseum;
+        }
+    });
+    document.querySelectorAll("#search-options select").forEach(elt => {
         elt.onchange = fillMuseum;
-        elt.onkeyup = fillMuseum;
+
     });
-    document.querySelectorAll("#search-panel select").forEach(elt => {
-        elt.onchange = fillMuseum;
-    });
-    document.querySelectorAll("#search-panel button").forEach(elt => {
-        elt.onclick = fillMuseum;
-    });
+    // remplissage de la liste des auteurs
     let authorSelector = document.getElementById("search-author-value");
     authorSelector.append(document.createElement("option"));
     jqnps.map(jqnp=>jqnp.auteur)
@@ -241,4 +252,8 @@ document.body.onload = evt => {
             option.textContent = auteur;
             authorSelector.append(option);
         });
-}
+    // initialisation de l'alignement auto
+    let autoFill = document.getElementById("auto-align");
+    autoFill.checked = localStorage.getItem("auto-align") === "true";
+    autoFill.onclick = e => { localStorage.setItem("auto-align", autoFill.checked); alignScroll() }
+});

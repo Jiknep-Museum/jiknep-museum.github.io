@@ -9,9 +9,9 @@
     </head>
     <body>
 
-        <button id="search-toggle"><span class="halo">🔍</span></button>    
-        <div id="search-panel">
-            <table>
+        <button id="options-toggle"><span class="halo">🔍</span></button>    
+        <div id="options-panel">
+            <table id="search-options">
                 <tr>
                     <th colspan="3">Filtre</th>
                     <th colspan="2">Tri</th>
@@ -31,8 +31,7 @@
                 </tr>
                 <tr>
                     <td>Auteur : </td>
-                    <td></td>
-                    <td><select id="search-author-value" type="text"></select></td>
+                    <td colspan="2"><select id="search-author-value" type="text"></select></td>
                     <td><input id="sort-order-author" type="number" size="2" min="1" max="4"></td>
                     <td><input id="sort-direction-author" type="checkbox">desc</td>
                 </tr>
@@ -62,7 +61,12 @@
                     <td><input id="sort-order-date" value="1" type="number" min="0"  min="1" max="4"></td>
                     <td><input id="sort-direction-date" type="checkbox" checked>desc</td>
                 </tr>
+                <tr>
+                    <td colspan="5" id="count"></td>
+                </tr>
             </table>
+            <hr>
+            <input type="checkbox" id="auto-align">Aligner automatiquement le tableau sur le haut de la page</input>
         </div>
  
         <div id="museum"></div>
