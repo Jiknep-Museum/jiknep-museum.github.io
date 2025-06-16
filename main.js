@@ -171,7 +171,7 @@ function fillMuseum(){
     let items = [
         ["name", j=>j.reponse[0].toLowerCase()], 
         ["author", j=>j.auteur.toLowerCase()], 
-        ["reactions", j=>jqnp.reactions_image.length + jqnp.reactions_reponse.length],
+        ["reactions", j=>j.reactions_image.length + j.reactions_reponse.length],
         ["date", j=>new Date(j.date).getTime()]
     ];
     for (let i=4; i>0; i--) {
