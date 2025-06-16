@@ -16,10 +16,21 @@ function imgResize(elt){
 }
 
 // Scoll pour aligner sur le haut de la fenêtre le Jiknep le plus proche
+let previousPageYOffset = pageYOffset;
 function alignScroll() {
     for (jqnp of document.querySelectorAll(".jqnp")){
-        if (jqnp.offsetTop + jqnp.offsetHeight/2 > pageYOffset) {
+        let scrollY = pageYOffset - previousPageYOffset
+
+        //vers le bas : on ajuste sur le premier tableau dont le sommet du cadre est dans le viewport
+        if (scrollY > 0 && jqnp.offsetTop > pageYOffset) {
             scrollTo({top: jqnp.offsetTop - 10, behavior:"smooth"});
+            previousPageYOffset = jqnp.offsetTop - 10;
+            break;
+        }
+        //vers le haut : on ajuste sur le premier tableau dont le bas du cadre est dans le viewport
+        if (scrollY < 0 && jqnp.offsetTop + jqnp.offsetHeight > pageYOffset) {
+            scrollTo({top: jqnp.offsetTop - 10, behavior:"smooth"});
+            previousPageYOffset = jqnp.offsetTop - 10;
             break;
         }
     }
@@ -253,7 +264,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
             authorSelector.append(option);
         });
     // initialisation de l'alignement auto
-    let autoFill = document.getElementById("auto-align");
-    autoFill.checked = localStorage.getItem("auto-align") === "true";
-    autoFill.onclick = e => { localStorage.setItem("auto-align", autoFill.checked); alignScroll() }
+    let autoAlignElt = document.getElementById("auto-align");
+    autoAlignElt.checked = localStorage.getItem("auto-align") === "true";
+    autoAlignElt.onclick = e => { localStorage.setItem("auto-align", autoAlignElt.checked); alignScroll() }
 });
