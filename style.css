@@ -90,6 +90,17 @@ div:nth-child(5n+4)>.tableau{
         drop-shadow(0 -1px 0 gold);
 }
 
+.nom-indetermine {
+    font-weight: bold;
+    font-size: x-large;
+    font-family: Georgia, serif;
+    filter: 
+        drop-shadow(1px 0 0px silver) 
+        drop-shadow(0 1px 0 silver) 
+        drop-shadow(-1px 0 0 silver) 
+        drop-shadow(0 -1px 0 silver);
+}
+
 .react {
     border: dotted saddlebrown 1px;
     border-radius: 5px;

@@ -74,8 +74,14 @@ function add_jqnep(jqnp, mur){
 
     // nom
     let nomElt = document.createElement("div");
-    nomElt.className = "nom";
-    nomElt.append(document.createTextNode(jqnp.reponse[0]));
+    if (jqnp.reponse[0]) {
+        nomElt.className = "nom";
+        nomElt.append(document.createTextNode(jqnp.reponse[0]));
+    }
+    else {
+        nomElt.className = "nom-indetermine";
+        nomElt.append(document.createTextNode("Nom de l'oeuvre en cours de délibération"));
+    }
     plaqueElt.append(nomElt);
 
     // reactions
