@@ -18,9 +18,14 @@ function imgResize(elt){
 // Scoll pour aligner sur le haut de la fenêtre le Jiknep le plus proche
 let previousPageYOffset = pageYOffset;
 function alignScroll() {
-    for (jqnp of document.querySelectorAll(".jqnp")){
-        let scrollY = pageYOffset - previousPageYOffset
+    let scrollY = pageYOffset - previousPageYOffset
 
+    //désactiver si on a atteind le fond
+    if (pageYOffset + window.innerHeight + 10 > document.body.scrollHeight) {
+        return
+    }
+
+    for (jqnp of document.querySelectorAll(".jqnp")){
         //vers le bas : on ajuste sur le premier tableau dont le sommet du cadre est dans le viewport
         if (scrollY > 0 && jqnp.offsetTop > pageYOffset) {
             scrollTo({top: jqnp.offsetTop - 10, behavior:"smooth"});
