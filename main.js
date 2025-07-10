@@ -311,6 +311,12 @@ document.addEventListener("DOMContentLoaded", (event) => {
     randomModeElt.checked = localStorage.getItem("random-mode") === "true";
     randomModeElt.onclick = e => { localStorage.setItem("random-mode", randomModeElt.checked); alignScroll() }
     // initalisation du battlepass
+    setTimeout(()=>{
+        if (localStorage.getItem("battlepass-displayed") !== "true"){
+            localStorage.setItem("battlepass-displayed", true)
+            document.getElementById("battlepass-panel").style.display="flex";
+        }
+    },10000)
     document.getElementById("battlepass-accept").onclick = e => alert("Mais ça va pas bien dans ta tête ?");
     document.getElementById("battlepass-refuse").onclick = e => document.getElementById("battlepass-panel").style.display="none";
     battlepassResize();
