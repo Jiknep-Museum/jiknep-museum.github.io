@@ -280,7 +280,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     document.getElementById("options-toggle").onclick = e => togglePanel("options-panel");
     document.getElementById("zone-toggle").onclick  = e => togglePanel("zone-panel")
     // rafraichisement des tableaux en cas de changement des options de recherche
-    document.querySelectorAll("#search-options input, #random-mode").forEach(elt => {
+    document.querySelectorAll("#search-options input").forEach(elt => {
         if (elt.type == "checkbox") {
             elt.onclick = fillMuseum;
         }
@@ -309,15 +309,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
     autoAlignElt.onclick = e => { localStorage.setItem("auto-align", autoAlignElt.checked); alignScroll() }
     let randomModeElt = document.getElementById("random-mode");
     randomModeElt.checked = localStorage.getItem("random-mode") === "true";
-    randomModeElt.onclick = e => { localStorage.setItem("random-mode", randomModeElt.checked); alignScroll() }
+    randomModeElt.onclick = e => { localStorage.setItem("random-mode", randomModeElt.checked); fillMuseum() }
     // initalisation du battlepass
     setTimeout(()=>{
         if (localStorage.getItem("battlepass-displayed") !== "true"){
-            localStorage.setItem("battlepass-displayed", true)
+            localStorage.setItem("battlepass-displayed", true);
             document.getElementById("battlepass-panel").style.display="flex";
             battlepassResize();
         }
-    },10000)
+    },10000);
     document.getElementById("battlepass-accept").onclick = e => alert("Mais ça va pas bien dans ta tête ?");
     document.getElementById("battlepass-refuse").onclick = e => document.getElementById("battlepass-panel").style.display="none";
     battlepassResize();
