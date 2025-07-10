@@ -14,6 +14,15 @@ function imgResize(elt){
     elt.style.height = (height|0) + "px" ;
     elt.style.width = (width|0) + "px" ;
 }
+function battlepassResize(){
+    let img = document.getElementById("battlepass-img");
+    let rX = img.clientWidth / img.naturalWidth;
+    let rY = img.clientHeight / img.naturalHeight;
+    let coordsAccept =[60*rX, 420*rY, 510*rX, 490*rY].join(",");
+    document.getElementById("battlepass-accept").coords = coordsAccept;
+    let coordRefuse = [1225*rX, 10*rY, 1265*rX, 50*rY].join(",");
+    document.getElementById("battlepass-refuse").coords = coordRefuse;
+}
 
 // Scoll pour aligner sur le haut de la fenêtre le Jiknep le plus proche
 let previousPageYOffset = pageYOffset;
@@ -118,20 +127,25 @@ function add_jqnep(jqnp, mur){
     plaqueElt.append(reactionsElt);
 }
 
-function searchToggleClick(){
-    let optionsPanel = document.getElementById("options-panel");
-    if (optionsPanel.style.display === "none" || optionsPanel.style.display === "") {
-        optionsPanel.style.display = "block";
-        optionsPanel.focus();
+function togglePanel(eltId){
+    let panel = document.getElementById(eltId);
+    if (panel.style.display === "none" || panel.style.display === "") {
+        panel.style.display = "block";
+        panel.focus();
     } else {
-        optionsPanel.style.display = "none";
+        panel.style.display = "none";
     }
 }
 
 let allJikneps;
 let lastLoadedJikneps;
 function fillMuseum(){
-    allJikneps = [...jqnps];
+    allJikneps = jqnps.map(jqnp => {
+        jqnp.random = Math.random();
+        jqnp.reactions_count = jqnp.reactions_image.reduce((acc,r)=>acc+=r[1], 0) 
+                               + jqnp.reactions_reponse.reduce((acc,r)=>acc+=r[1], 0);
+        return jqnp;
+    });
     lastLoadedJikneps = 0;
 
     // filter par nom
@@ -162,15 +176,14 @@ function fillMuseum(){
     let reactionsType = document.getElementById("search-reactions-type").value;
     if (reactionsValue) {
         let reactions = parseInt(reactionsValue);
-        let countReaction = jqnp => jqnp.reactions_image.reduce((acc,r)=>acc+=r[1], 0) + jqnp.reactions_reponse.reduce((acc,r)=>acc+=r[1], 0);
         if (reactionsType == "mini") {
-            allJikneps = allJikneps.filter(jqnp => countReaction(jqnp) > reactions);
+            allJikneps = allJikneps.filter(jqnp => jqnp.reactions_count > reactions);
         }
         if (reactionsType == "max") {
-            allJikneps = allJikneps.filter(jqnp => countReaction(jqnp) < reactions);
+            allJikneps = allJikneps.filter(jqnp => jqnp.reactions_count < reactions);
         }
         if (reactionsType == "exact") {
-            allJikneps = allJikneps.filter(jqnp => countReaction(jqnp) == reactions);
+            allJikneps = allJikneps.filter(jqnp => jqnp.reactions_count == reactions);
         }
     }
     // filter par date
@@ -191,23 +204,22 @@ function fillMuseum(){
 
     // tri
     let items = [
-        ["name", j=>j.reponse[0].toLowerCase()], 
-        ["author", j=>j.auteur.toLowerCase()], 
+        ["date", j=>new Date(j.date).getTime()],
         ["reactions", j=>j.reactions_image.length + j.reactions_reponse.length],
-        ["date", j=>new Date(j.date).getTime()]
+        ["name", j=>j.reponse[0].toLowerCase()], 
+        ["author", j=>j.auteur.toLowerCase()] 
     ];
-    for (let i=4; i>0; i--) {
-        for (let [itemName, itemFunc] of items) {
-            let sortOrder = document.getElementById("sort-order-" + itemName).value;
-            if (sortOrder == i) {
-                let sortDesc = document.getElementById("sort-direction-" + itemName).checked;
-                if (sortDesc) {
-                    allJikneps.sort((a,b) => itemFunc(a) < itemFunc(b) ? 1 : -1);
-                } else {
-                    allJikneps.sort((a,b) => itemFunc(a) > itemFunc(b) ? 1 : -1);
-                }
-            }
+    for (let [itemName, itemFunc] of items) {
+        let sort = document.getElementById("sort-" + itemName).value;
+        if (sort=="desc") {
+            allJikneps.sort((a,b) => itemFunc(a) < itemFunc(b) ? 1 : -1);
+        } 
+        if (sort=="asc") {
+            allJikneps.sort((a,b) => itemFunc(a) > itemFunc(b) ? 1 : -1);
         }
+    }
+    if (document.getElementById("random-mode").checked){
+        allJikneps.sort((a,b) => a.random > b.random ? 1 : -1);
     }
 
     let count = document.getElementById("count");
@@ -231,12 +243,24 @@ function lazyLoadJikneps() {
     }
 }
 
+async function loadData(){
+    const url = document.getElementById("zone").value;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+    }
+    jqnps = await response.json();
+
+    fillMuseum();
+}
+
 // ******************** Main code ********************
-fillMuseum();
+loadData();
 window.onresize = evt => {
     for (img of document.querySelectorAll(".tableau img")) {
         imgResize(img);
     }
+    battlepassResize();
 }
 let timer;
 document.body.onscroll = evt => {
@@ -247,10 +271,16 @@ document.body.onscroll = evt => {
     }
 }
 document.addEventListener("DOMContentLoaded", (event) => {
+    // changement d'aile 
+    document.getElementById("zone").onchange = e => {
+        togglePanel("zone-panel");
+        loadData();
+    }
     // ouverture/fermeture de la boite de recherche
-    document.getElementById("options-toggle").onclick = searchToggleClick
+    document.getElementById("options-toggle").onclick = e => togglePanel("options-panel");
+    document.getElementById("zone-toggle").onclick  = e => togglePanel("zone-panel")
     // rafraichisement des tableaux en cas de changement des options de recherche
-    document.querySelectorAll("#search-options input").forEach(elt => {
+    document.querySelectorAll("#search-options input, #random-mode").forEach(elt => {
         if (elt.type == "checkbox") {
             elt.onclick = fillMuseum;
         }
@@ -260,7 +290,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     });
     document.querySelectorAll("#search-options select").forEach(elt => {
         elt.onchange = fillMuseum;
-
     });
     // remplissage de la liste des auteurs
     let authorSelector = document.getElementById("search-author-value");
@@ -274,8 +303,15 @@ document.addEventListener("DOMContentLoaded", (event) => {
             option.textContent = auteur;
             authorSelector.append(option);
         });
-    // initialisation de l'alignement auto
+    // initialisation des paramètres enregistrés
     let autoAlignElt = document.getElementById("auto-align");
     autoAlignElt.checked = localStorage.getItem("auto-align") === "true";
     autoAlignElt.onclick = e => { localStorage.setItem("auto-align", autoAlignElt.checked); alignScroll() }
+    let randomModeElt = document.getElementById("random-mode");
+    randomModeElt.checked = localStorage.getItem("random-mode") === "true";
+    randomModeElt.onclick = e => { localStorage.setItem("random-mode", randomModeElt.checked); alignScroll() }
+    // initalisation du battlepass
+    document.getElementById("battlepass-accept").onclick = e => alert("Mais ça va pas bien dans ta tête ?");
+    document.getElementById("battlepass-refuse").onclick = e => document.getElementById("battlepass-panel").style.display="none";
+    battlepassResize();
 });

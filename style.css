@@ -114,29 +114,46 @@ h1 {
     color: beige;
 }
 
-#options-panel {
+.panel {
     display: none;
     position: fixed;
-    top: 5px;
-    right: 5px;
     background-image: url("img/wood.jpg");
+    color: aliceblue;
     padding: 30px;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     z-index: 4;
 }
-
-#options-panel {
-    color: aliceblue;
-}
-
-#options-toggle {
+.toggle {
     position: fixed;
-    top: 5px;
-    right: 5px;
     background-image: url("img/wood.jpg");
     color: aliceblue;
     padding: 10px;
     border-radius: 5px;
     z-index: 5;
+}
+#options-toggle, #options-panel {
+    top: 5px;
+    right: 5px;
+}
+#zone-toggle, #zone-panel {
+    top: 5px;
+    right: 50px;
+}
+
+#battlepass-panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00000080;
+    z-index: 10;
+}
+#battlepass-panel img {
+    max-width: 80%;
+    max-height: 80%;
 }
