@@ -315,6 +315,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
         if (localStorage.getItem("battlepass-displayed") !== "true"){
             localStorage.setItem("battlepass-displayed", true)
             document.getElementById("battlepass-panel").style.display="flex";
+            battlepassResize();
         }
     },10000)
     document.getElementById("battlepass-accept").onclick = e => alert("Mais ça va pas bien dans ta tête ?");
