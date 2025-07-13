@@ -205,7 +205,7 @@ function fillMuseum(){
     // tri
     let items = [
         ["date", j=>new Date(j.date).getTime()],
-        ["reactions", j=>j.reactions_image.length + j.reactions_reponse.length],
+        ["reactions", j=>j.reactions_count],
         ["name", j=>j.reponse[0].toLowerCase()], 
         ["author", j=>j.auteur.toLowerCase()] 
     ];
