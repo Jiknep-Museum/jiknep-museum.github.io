@@ -232,6 +232,22 @@ function fillMuseum(){
 
 }
 
+function fillAuthorList(){
+    // remplissage de la liste des auteurs
+    let authorSelector = document.getElementById("search-author-value");
+    authorSelector.append(document.createElement("option"));
+    jqnps.map(jqnp=>jqnp.auteur)
+        .reduce((acc, auteur) => {if (!acc.includes(auteur)) acc.push(auteur); return acc;}, [])
+        .sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase()))
+        .forEach(auteur => {
+            let option = document.createElement("option");
+            option.value = auteur;
+            option.textContent = auteur;
+            authorSelector.append(option);
+        });
+    
+}
+
 const loadPack = 20;
 function lazyLoadJikneps() {
     if (pageYOffset > document.body.scrollHeight - window.innerHeight -5) {
@@ -250,7 +266,7 @@ async function loadData(){
         throw new Error(`Response status: ${response.status}`);
     }
     jqnps = await response.json();
-
+    fillAuthorList()    
     fillMuseum();
 }
 
@@ -291,18 +307,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     document.querySelectorAll("#search-options select").forEach(elt => {
         elt.onchange = fillMuseum;
     });
-    // remplissage de la liste des auteurs
-    let authorSelector = document.getElementById("search-author-value");
-    authorSelector.append(document.createElement("option"));
-    jqnps.map(jqnp=>jqnp.auteur)
-        .reduce((acc, auteur) => {if (!acc.includes(auteur)) acc.push(auteur); return acc;}, [])
-        .sort((a,b) => a.toLowerCase().localeCompare(b.toLowerCase()))
-        .forEach(auteur => {
-            let option = document.createElement("option");
-            option.value = auteur;
-            option.textContent = auteur;
-            authorSelector.append(option);
-        });
     // initialisation des paramètres enregistrés
     let autoAlignElt = document.getElementById("auto-align");
     autoAlignElt.checked = localStorage.getItem("auto-align") === "true";
